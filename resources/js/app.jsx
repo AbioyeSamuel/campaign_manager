@@ -1,13 +1,17 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CampaignForm from './campaigns/campaignForm';
 import CampaignList from './campaigns/campaignList';
 
 const App = () => (
-    <div>
-        <h1>Campaign Manager</h1>
-        <CampaignForm />
-        <CampaignList />
-    </div>
+    <Router>
+        <div>
+            <Routes>
+                <Route path="/" element={<CampaignForm />} />
+                <Route path="/campaigns" element={<CampaignList />} />
+            </Routes>
+        </div>
+    </Router>
 );
 
 export default App;

@@ -14,6 +14,13 @@ class HandleInertiaRequests extends Middleware
      */
     protected $rootView = 'app';
 
+    protected $middleware = [
+        // Other middleware
+        \App\Http\Middleware\Cors::class,
+        \Fruitcake\Cors\HandleCors::class,
+    ];
+    
+
     /**
      * Determine the current asset version.
      */
