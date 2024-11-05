@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class CampaignController extends Controller
 {
     public function index()
     {
-        return response()->json(Campaign::all());
+        $campaigns = Cache::remember('campaigns', 60, function () {
+            return Campaign::all();
+        });
+
+        return response()->json($campaigns);
     }
 
     public function store(Request $request)
@@ -42,12 +47,15 @@ class CampaignController extends Controller
             'creatives' => $creatives,
         ]);
 
+        Cache::forget('campaigns'); // Clear the cache
+
         return response()->json($campaign, 201);
     }
 
     public function update(Request $request, $id)
     {
         $campaign = Campaign::findOrFail($id);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'from' => 'required|date',
@@ -75,6 +83,8 @@ class CampaignController extends Controller
             'creatives' => $creatives,
         ]);
 
+        Cache::forget('campaigns'); 
+
         return response()->json($campaign);
     }
 
@@ -82,6 +92,8 @@ class CampaignController extends Controller
     {
         $campaign = Campaign::findOrFail($id);
         $campaign->delete();
+
+        Cache::forget('campaigns'); 
 
         return response()->json(['message' => 'Campaign deleted successfully']);
     }
